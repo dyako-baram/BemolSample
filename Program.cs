@@ -10,17 +10,22 @@ namespace BemolSample
         static void Main(string[] args)
         {
             App app=new App().Start(5000);
+            
             var personList=PopulatePersonList();
 
-            app.Get("/",(x)=>{
-                x.Json(personList);
+            app.Get("/",(cxt)=>{
+                cxt.Json(personList);
             });
 
-            app.Get("/:id",(x)=>{
-                int id=x.PathParam<int>("id");
-                x.Json(personList.FirstOrDefault(x=>x.Id==id));
+            app.Get("/:id",(cxt)=>{
+                int id=cxt.PathParam<int>("id");
+                cxt.Json(personList.FirstOrDefault(x=>x.Id==id));
             });
-
+            app.Post("/",(cxt)=>{
+                Person person=cxt.Body<Person>();
+                personList.Add(person);
+                cxt.Json(person);
+            });
         }
         public static List<Person> PopulatePersonList()
         {
@@ -29,10 +34,7 @@ namespace BemolSample
                 new Person(2,"jane",34),
                 new Person(3,"bob",12),
                 new Person(4,"jake",45),
-                new Person(5,"doe",22),
-                new Person(6,"sam",11),
-                new Person(7,"drake",26),
-                new Person(8,"naithen",66)
+                new Person(5,"doe",22)
             };
         }
         
